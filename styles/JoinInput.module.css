@@ -1,0 +1,3 @@
+.inputGroup > input:focus + button {
+  @apply -translate-y-1 transform;
+}

@@ -1,19 +1,113 @@
+import JoinAlert from 'components/join-alert'
+import JoinInput from 'components/join-input'
+import JoinLoader from 'components/join-loader'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { useRef, useState } from 'react'
+import { generateKey, generateUsername } from 'utils/shuffle'
+
+import classNames from 'classnames'
+import styles from 'styles/Home.module.css'
 
 const Home: NextPage = () => {
+  const [userColor, setUserColor] = useState<string>('#000000')
+  const [username, setUsername] = useState<string>('')
+  const [key, setKey] = useState<string>('')
+
+  const [alert, setAlert] = useState<string | null>(null)
+  const [isLoading, setLoader] = useState<boolean>(false)
+
+  const formElem = useRef<HTMLFormElement | null>(null)
+
+  async function joinOrCreate() {
+    formElem.current?.setAttribute('inert', 'inert')
+
+    setAlert(null)
+    setLoader(true)
+
+    if (!username) {
+      setUsername(generateUsername())
+    }
+
+    // fake delay
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    // fake error
+    setAlert('Room is full!')
+    setLoader(false)
+
+    formElem.current?.removeAttribute('inert')
+  }
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold underline">
-        Hello Next!{' '}
-        <FontAwesomeIcon
-          icon={solid('face-smile')}
-          className="animate-ping text-sm"
-        />
-      </h1>
+    <div className="mx-auto w-fit">
+      <header className="ml-4">
+        <h1 className="mt-16 -ml-1 text-[4rem] font-black uppercase text-white xl:-ml-2 xl:text-[7rem]">
+          Collanvas
+          <span className="text-[.8em] lowercase text-white/80">.io</span>
+        </h1>
+        <p className="-mt-6 text-lg text-white xl:-mt-8 xl:text-2xl">
+          Your whole team, changing the world one stroke at a time.
+        </p>
+      </header>
+
+      <main className="mx-auto mt-20 w-fit max-w-lg">
+        <form
+          ref={formElem}
+          className={classNames(
+            'grid grid-flow-row-dense grid-cols-1 gap-4',
+            styles.joinForm
+          )}
+          onSubmit={(event) => {
+            event.preventDefault()
+            joinOrCreate()
+          }}
+        >
+          <JoinInput
+            value={key}
+            onChange={(val) => setKey(val)}
+            onShuffle={() => setKey(generateKey())}
+            autoFocus
+            required
+          >
+            Key...
+          </JoinInput>
+          <fieldset className="flex gap-2 pt-1">
+            <JoinInput
+              value={username}
+              onChange={(val) => setUsername(val)}
+              onShuffle={() => setUsername(generateUsername())}
+            >
+              Username...
+            </JoinInput>
+            <label
+              className="relative aspect-square w-14 shrink-0 grow-0 rounded-md border-2 border-white ring-2 ring-primary-200"
+              style={{ backgroundColor: userColor }}
+            >
+              <input
+                type="color"
+                className="absolute inset-0 opacity-0"
+                value={userColor}
+                onChange={(event) => setUserColor(event.target.value)}
+              />
+            </label>
+          </fieldset>
+          <button
+            type="submit"
+            className="btn rounded-md bg-white/10 py-2 text-xl font-bold uppercase text-white active:bg-white/5"
+          >
+            Join or create a Collanvas
+          </button>
+        </form>
+
+        {isLoading && (
+          <div className="mx-auto mt-4 w-fit">
+            <JoinLoader />
+          </div>
+        )}
+
+        {alert && <JoinAlert onClose={() => setAlert(null)}>{alert}</JoinAlert>}
+      </main>
     </div>
   )
 }
