@@ -1,7 +1,10 @@
-import JoinAlert from 'components/join-alert'
-import JoinInput from 'components/join-input'
-import JoinLoader from 'components/join-loader'
+import JoinAlert from 'components/join/join-alert'
+import JoinInput from 'components/join/join-input'
+import AppLoader from 'components/app/app-loader'
+
 import type { NextPage } from 'next'
+import type { NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 import { useRef, useState } from 'react'
 import { generateKey, generateUsername } from 'utils/shuffle'
@@ -15,28 +18,44 @@ const Home: NextPage = () => {
   const [key, setKey] = useState<string>('')
 
   const [alert, setAlert] = useState<string | null>(null)
-  const [isLoading, setLoader] = useState<boolean>(false)
+  const [isLoading, setLoading] = useState<boolean>(false)
 
   const formElem = useRef<HTMLFormElement | null>(null)
+
+  const router: NextRouter = useRouter()
 
   async function joinOrCreate() {
     formElem.current?.setAttribute('inert', 'inert')
 
     setAlert(null)
-    setLoader(true)
+    setLoading(true)
 
+    // If username hasn't been chosen, automatically generate a new one and save its value for immediately use in the following route
+    let finalUsername
     if (!username) {
-      setUsername(generateUsername())
+      finalUsername = generateUsername()
+      setUsername(finalUsername)
+    } else {
+      finalUsername = username
     }
 
     // fake delay
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     // fake error
-    setAlert('Room is full!')
-    setLoader(false)
+    // setAlert('Room is full!')
+    // setLoading(false)
 
     formElem.current?.removeAttribute('inert')
+
+    router.push({
+      pathname: `/draw/${key}`,
+      query: {
+        username: finalUsername,
+        userColorHex: userColor.toLowerCase(),
+        totalUsers: 5, // TODO: use real data
+      },
+    })
   }
 
   return (
@@ -102,7 +121,7 @@ const Home: NextPage = () => {
 
         {isLoading && (
           <div className="mx-auto mt-4 w-fit">
-            <JoinLoader />
+            <AppLoader />
           </div>
         )}
 

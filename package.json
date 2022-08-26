@@ -20,6 +20,8 @@
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-sizeme": "^3.0.2",
+    "react-use": "^17.4.0",
     "redis": "^4.3.0",
     "redis-om": "^0.3.6",
     "socket.io": "^4.5.1",

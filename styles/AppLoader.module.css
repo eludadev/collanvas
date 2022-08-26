@@ -1,4 +1,4 @@
-.loader {
+.loaderLight {
   width: 90.9090909091px;
   height: 100px;
   background: no-repeat
@@ -13,10 +13,24 @@
   background-size: 12.5px 100%;
   background-position: 50% 33.3333333333px, 0% 50%, 50% -33.3333333333px,
     100% 50%;
-  animation: join-loader 1s ease-in-out infinite alternate;
+  animation: loader 1s ease-in-out infinite alternate;
 }
 
-@keyframes join-loader {
+.loaderDark {
+  width: 90.9090909091px;
+  height: 100px;
+  background: no-repeat
+      radial-gradient(circle closest-side, #3b82f6 90%, transparent),
+    no-repeat radial-gradient(circle closest-side, #000 90%, transparent),
+    no-repeat radial-gradient(circle closest-side, #000 90%, transparent),
+    no-repeat radial-gradient(circle closest-side, #000 90%, transparent);
+  background-size: 12.5px 100%;
+  background-position: 50% 33.3333333333px, 0% 50%, 50% -33.3333333333px,
+    100% 50%;
+  animation: loader 1s ease-in-out infinite alternate;
+}
+
+@keyframes loader {
   100% {
     transform: rotate(0deg);
     background-position: 50% 12.5px, 25px 50%, 50% -12.5px, 51.7045454545px 50%;
