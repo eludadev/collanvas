@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { withSize } from 'react-sizeme'
 import DrawingCanvas from './drawing-canvas'
 import DrawingToolbar from './drawing-toolbar'
+import io from 'socket.io-client'
 
 export type StrokeType = 'Pen' | 'Eraser'
 
@@ -20,6 +21,7 @@ export type Stroke = {
 
 type DrawingPanelProps = {
   keyName: string
+  roomKey: string
   myColor: string
   size: {
     width: number
@@ -27,9 +29,15 @@ type DrawingPanelProps = {
   }
 }
 
+const socket = io()
+socket.on('connect', () => {
+  console.log(`New connection: ${socket.id}`)
+})
+
 const DrawingPanel = ({
   keyName,
   myColor,
+  roomKey,
   size: mySize,
 }: DrawingPanelProps) => {
   const [isLoading, setLoading] = useState<boolean>(true)
@@ -39,6 +47,25 @@ const DrawingPanel = ({
 
   const [strokes, setStrokes] = useState<Stroke[]>([])
   const [currentStroke, setCurrentStroke] = useState<Stroke | null>(null)
+
+  function addStroke(stroke: Stroke) {
+    setStrokes((strokes) => strokes.concat(stroke))
+  }
+
+  // Intialize socket connection
+  useEffect(() => {
+    socket.on(`undo.${roomKey}`, () => undo(false))
+    socket.on(`drawingdone.${roomKey}`, (stroke: Stroke) => {
+      addStroke(stroke)
+    })
+  }, [roomKey])
+
+  function undo(emit?: boolean) {
+    setStrokes((strokes) => strokes.splice(0, strokes.length - 1))
+    if (emit) {
+      socket.emit('undo', { roomKey })
+    }
+  }
 
   useEffect(() => {
     async function fetchCanvas() {
@@ -134,12 +161,19 @@ const DrawingPanel = ({
       ) : (
         <div className="absolute inset-0">
           <DrawingCanvas
+            roomKey={roomKey}
             strokes={strokes.concat(currentStroke ? [currentStroke] : [])}
             size={mySize}
             onUp={({ x, y }: Point) => {
-              currentStroke && setStrokes(strokes.concat(currentStroke))
+              if (currentStroke) {
+                addStroke(currentStroke)
+                socket.emit('drawingdone', {
+                  roomKey,
+                  stroke: currentStroke,
+                })
+              }
+
               setCurrentStroke(null)
-              // TODO: submit data to the server
             }}
             onDown={({ x, y }: Point) => {
               setCurrentStroke({
@@ -153,19 +187,20 @@ const DrawingPanel = ({
                   },
                 ],
               })
-
-              // TODO: send data to server
             }}
-            onMove={({ x, y }: Point) => {
+            onMove={throttle(({ x, y }: Point) => {
               if (currentStroke) {
                 setCurrentStroke({
                   ...currentStroke,
                   points: currentStroke.points.concat([{ x, y }]),
                 })
-              }
 
-              // TODO: send socket data (but throttled!!!)
-            }}
+                socket.emit('drawing', {
+                  roomKey,
+                  stroke: currentStroke,
+                })
+              }
+            }, 10)}
           />
         </div>
       )}
@@ -177,7 +212,7 @@ const DrawingPanel = ({
           onChangeThickness={(thickness: number) => setThickness(thickness)}
           selectedTool={selectedTool}
           onChangeTool={(tool: StrokeType) => selectTool(tool)}
-          onUndo={() => setStrokes(strokes.splice(0, strokes.length - 1))}
+          onUndo={() => undo(true)}
         />
       </div>
     </div>
@@ -185,3 +220,15 @@ const DrawingPanel = ({
 }
 
 export default withSize({ monitorHeight: true })(DrawingPanel)
+
+function throttle(callback: (...args: any) => any, delay: number) {
+  let previousCall = new Date().getTime()
+  return function () {
+    const time = new Date().getTime()
+
+    if (time - previousCall >= delay) {
+      previousCall = time
+      callback.apply(null, arguments as unknown as any[])
+    }
+  }
+}

@@ -21,7 +21,6 @@ const Draw: NextPage = () => {
   const router: NextRouter = useRouter()
 
   // Extract initial data from route
-
   const roomKey: string = (router.query.key as string) || 'default'
   const username: string = (router.query.username as string) || 'default'
   const totalUsers: number = Number(router.query.totalUsers as string) || 0
@@ -29,7 +28,6 @@ const Draw: NextPage = () => {
     (router.query.userColorHex as string) || '#000000'
 
   // Copy room key to clipboard
-
   const [{ value: copiedValue }, copyToClipboard] = useCopyToClipboard()
   const [isCopied, setCopied] = useState<boolean>(false)
 
@@ -94,7 +92,11 @@ const Draw: NextPage = () => {
           <DrawingPanel keyName={roomKey} myColor={userColorHex} />
         </section>
         <section className="relative h-[50vh] border-t-2 lg:h-auto lg:border-l-2 lg:border-t-0">
-          <MessagesPanel myUsername={username} myColor={userColorHex} />
+          <MessagesPanel
+            myUsername={username}
+            myColor={userColorHex}
+            roomKey={roomKey}
+          />
         </section>
       </div>
     </div>

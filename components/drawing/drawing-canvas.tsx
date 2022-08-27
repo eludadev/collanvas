@@ -1,8 +1,10 @@
 import { MouseEvent, TouchEvent, useEffect, useRef } from 'react'
 import { Point, Stroke } from './drawing-panel'
+import io from 'socket.io-client'
 
 type DrawingCanvasProps = {
   strokes: Stroke[]
+  roomKey: string
   size: {
     width: number
     height: number
@@ -12,14 +14,69 @@ type DrawingCanvasProps = {
   onUp: ({ x, y }: Point) => void
 }
 
+const socket = io()
+socket.on('connect', () => {
+  console.log(`New connection: ${socket.id}`)
+})
+
 const DrawingCanvas = ({
   strokes,
+  roomKey,
   size,
   onDown,
   onMove,
   onUp,
 }: DrawingCanvasProps) => {
   const canvasElem = useRef<HTMLCanvasElement | null>(null)
+
+  function drawStroke({ type, color, thickness, points }: Stroke) {
+    // Make sure canvas element exists and get its dimensions
+    if (!canvasElem.current) return
+    const {
+      width,
+      height,
+    }: {
+      width: number
+      height: number
+    } = canvasElem.current
+
+    // Make sure 2d context exists for canvas
+    const ctx = canvasElem.current.getContext('2d')
+    if (!ctx) return
+
+    ctx.beginPath()
+
+    switch (type) {
+      case 'Pen':
+        ctx.globalCompositeOperation = 'source-over'
+        break
+      case 'Eraser':
+        ctx.globalCompositeOperation = 'destination-out'
+        break
+    }
+
+    // Draw the first point if it exists
+    if (!points.length) return
+    ctx.moveTo(points[0].x * width, points[0].y * height)
+
+    // Draw every other point
+    for (const otherPoint of points.slice(1)) {
+      ctx.lineTo(otherPoint.x * width, otherPoint.y * height)
+    }
+
+    ctx.strokeStyle = color
+    ctx.lineWidth = thickness
+
+    ctx.stroke()
+    ctx.closePath()
+  }
+
+  // Intialize socket connection
+  useEffect(() => {
+    socket.on(`drawing.${roomKey}`, (stroke: Stroke) => {
+      drawStroke(stroke)
+    })
+  }, [roomKey])
 
   useEffect(() => {
     // Make sure canvas element exists and get its dimensions
@@ -40,32 +97,8 @@ const DrawingCanvas = ({
     ctx.clearRect(0, 0, width, height)
 
     // Draw the strokes
-    strokes.forEach(({ type, points, color, thickness }: Stroke) => {
-      ctx.beginPath()
-
-      switch (type) {
-        case 'Pen':
-          ctx.globalCompositeOperation = 'source-over'
-          break
-        case 'Eraser':
-          ctx.globalCompositeOperation = 'destination-out'
-          break
-      }
-
-      // Draw the first point if it exists
-      if (!points.length) return
-      ctx.moveTo(points[0].x * width, points[0].y * height)
-
-      // Draw every other point
-      for (const otherPoint of points.slice(1)) {
-        ctx.lineTo(otherPoint.x * width, otherPoint.y * height)
-      }
-
-      ctx.strokeStyle = color
-      ctx.lineWidth = thickness
-
-      ctx.stroke()
-      ctx.closePath()
+    strokes.forEach((stroke: Stroke) => {
+      drawStroke(stroke)
     })
   }, [strokes, size])
 
