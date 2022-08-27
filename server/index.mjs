@@ -72,7 +72,7 @@ app.prepare().then(() => {
         JSON.stringify({ message, socketId: socket.id })
       )
 
-      // TODO: add message to DB
+      connection.json.arrAppend(`messages:${roomKey}`, '$', message)
     })
 
     socket.on('drawing', ({ roomKey, stroke }) => {
@@ -83,11 +83,12 @@ app.prepare().then(() => {
     })
 
     socket.on('drawingdone', ({ roomKey, stroke }) => {
-      // TODO: add stroke to DB
       publisher.publish(
         `drawingdone.${roomKey}`,
         JSON.stringify({ stroke, socketId: socket.id })
       )
+
+      connection.json.arrAppend(`canvas:${roomKey}`, '$', stroke)
     })
 
     socket.on('undo', ({ roomKey }) => {
@@ -95,6 +96,8 @@ app.prepare().then(() => {
         `undo.${roomKey}`,
         JSON.stringify({ socketId: socket.id })
       )
+
+      connection.json.arrPop(`canvas:${roomKey}`, '$')
     })
   })
 })

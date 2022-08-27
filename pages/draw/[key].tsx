@@ -28,7 +28,7 @@ const Draw: NextPage = () => {
   const router: NextRouter = useRouter()
 
   // Extract initial data from route
-  const roomKey: string = (router.query.key as string) || 'default'
+  const roomKey: string = router.query.key as string
   const username: string = (router.query.username as string) || 'default'
   const userColorHex: string =
     (router.query.userColorHex as string) || '#000000'

@@ -39,12 +39,9 @@ const Home: NextPage = () => {
       finalUsername = username
     }
 
-    // fake delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // fake error
-    // setAlert('Room is full!')
-    // setLoading(false)
+    await fetch(`/api/room/${key}`, {
+      method: 'post',
+    })
 
     formElem.current?.removeAttribute('inert')
 

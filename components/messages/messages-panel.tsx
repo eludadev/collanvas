@@ -1,12 +1,10 @@
-import { faker } from '@faker-js/faker'
 import AppLoader from 'components/app/app-loader'
 import { useEffect, useRef, useState } from 'react'
 import { Socket } from 'socket.io-client'
-import { generateUsername } from 'utils/shuffle'
 import MessageInput from './message-input'
 import MessageItem from './message-item'
 
-type Message = {
+export type Message = {
   username: string
   color: string
   content: string
@@ -58,27 +56,17 @@ const MessagesPanel = ({
 
   useEffect(() => {
     async function fetchMessages() {
-      // fake delay
-      await new Promise((resolve) => setTimeout(resolve, 1200))
+      const res = await fetch(`/api/room/${roomKey}/messages`)
+      const fetchedMessages = await res.json()
+
+      setMessages(fetchedMessages)
       setLoading(false)
-
-      // fake data
-      const fakeMessages: Message[] = []
-      for (let i = 0; i < 8; i++) {
-        const message: Message = {
-          username: generateUsername(),
-          color: faker.color.rgb(),
-          content: faker.lorem.sentence(),
-        }
-
-        fakeMessages.push(message)
-      }
-
-      setMessages(fakeMessages)
     }
 
-    fetchMessages()
-  }, [])
+    if (roomKey) {
+      fetchMessages()
+    }
+  }, [roomKey])
 
   // Scroll to bottom whenever new messages come
   useEffect(() => {
