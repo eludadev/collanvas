@@ -134,8 +134,12 @@ const DrawingCanvas = ({
     } = canvasElem.current || size
 
     return {
-      x: e.touches[0].clientX / width,
-      y: e.touches[0].clientY / height,
+      x: e.touches.length
+        ? Math.round(e.touches[0].clientX - canvasLeft) / width
+        : 0,
+      y: e.touches.length
+        ? Math.round(e.touches[0].clientY - canvasTop) / height
+        : 0,
     }
   }
 
