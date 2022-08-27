@@ -11,9 +11,11 @@ import { generateKey, generateUsername } from 'utils/shuffle'
 
 import classNames from 'classnames'
 import styles from 'styles/Home.module.css'
+import { faker } from '@faker-js/faker'
+
 
 const Home: NextPage = () => {
-  const [userColor, setUserColor] = useState<string>('#000000')
+  const [userColor, setUserColor] = useState<string>(faker.color.rgb())
   const [username, setUsername] = useState<string>('')
   const [key, setKey] = useState<string>('')
 
@@ -29,7 +31,7 @@ const Home: NextPage = () => {
 
     setAlert(null)
     setLoading(true)
-
+    
     // If username hasn't been chosen, automatically generate a new one and save its value for immediately use in the following route
     let finalUsername
     if (!username) {
