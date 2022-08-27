@@ -1,9 +1,9 @@
 import AppLoader from 'components/app/app-loader'
 import { useEffect, useState } from 'react'
 import { withSize } from 'react-sizeme'
+import { Socket } from 'socket.io-client'
 import DrawingCanvas from './drawing-canvas'
 import DrawingToolbar from './drawing-toolbar'
-import io from 'socket.io-client'
 
 export type StrokeType = 'Pen' | 'Eraser'
 
@@ -20,8 +20,8 @@ export type Stroke = {
 }
 
 type DrawingPanelProps = {
-  keyName: string
   roomKey: string
+  socket: Socket
   myColor: string
   size: {
     width: number
@@ -29,15 +29,10 @@ type DrawingPanelProps = {
   }
 }
 
-const socket = io()
-socket.on('connect', () => {
-  console.log(`New connection: ${socket.id}`)
-})
-
 const DrawingPanel = ({
-  keyName,
   myColor,
   roomKey,
+  socket,
   size: mySize,
 }: DrawingPanelProps) => {
   const [isLoading, setLoading] = useState<boolean>(true)
@@ -161,6 +156,7 @@ const DrawingPanel = ({
       ) : (
         <div className="absolute inset-0">
           <DrawingCanvas
+            socket={socket}
             roomKey={roomKey}
             strokes={strokes.concat(currentStroke ? [currentStroke] : [])}
             size={mySize}

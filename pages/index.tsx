@@ -53,7 +53,6 @@ const Home: NextPage = () => {
       query: {
         username: finalUsername,
         userColorHex: userColor.toLowerCase(),
-        totalUsers: 5, // TODO: use real data
       },
     })
   }

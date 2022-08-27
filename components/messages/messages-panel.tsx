@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker'
 import AppLoader from 'components/app/app-loader'
 import { useEffect, useRef, useState } from 'react'
+import { Socket } from 'socket.io-client'
 import { generateUsername } from 'utils/shuffle'
 import MessageInput from './message-input'
 import MessageItem from './message-item'
-import io from 'socket.io-client'
 
 type Message = {
   username: string
@@ -16,16 +16,13 @@ type MessagesPanelProps = {
   myUsername: string
   myColor: string
   roomKey: string
+  socket: Socket
 }
-
-const socket = io()
-socket.on('connect', () => {
-  console.log(`New connection: ${socket.id}`)
-})
 
 const MessagesPanel = ({
   myUsername,
   myColor,
+  socket,
   roomKey,
 }: MessagesPanelProps) => {
   const [isLoading, setLoading] = useState<boolean>(true)

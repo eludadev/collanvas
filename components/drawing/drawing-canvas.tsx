@@ -1,9 +1,10 @@
 import { MouseEvent, TouchEvent, useEffect, useRef } from 'react'
+import { Socket } from 'socket.io-client'
 import { Point, Stroke } from './drawing-panel'
-import io from 'socket.io-client'
 
 type DrawingCanvasProps = {
   strokes: Stroke[]
+  socket: Socket
   roomKey: string
   size: {
     width: number
@@ -14,15 +15,11 @@ type DrawingCanvasProps = {
   onUp: ({ x, y }: Point) => void
 }
 
-const socket = io()
-socket.on('connect', () => {
-  console.log(`New connection: ${socket.id}`)
-})
-
 const DrawingCanvas = ({
   strokes,
   roomKey,
   size,
+  socket,
   onDown,
   onMove,
   onUp,

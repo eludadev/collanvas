@@ -10,12 +10,19 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import type { NextRouter } from 'next/router'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCopyToClipboard, useDebounce } from 'react-use'
 
 import AppIcon from 'components/app/app-icon'
 import DrawingPanel from 'components/drawing/drawing-panel'
 import MessagesPanel from 'components/messages/messages-panel'
+
+import io from 'socket.io-client'
+
+const socket = io()
+socket.on('connect', () => {
+  console.log(`New connection: ${socket.id}`)
+})
 
 const Draw: NextPage = () => {
   const router: NextRouter = useRouter()
@@ -23,7 +30,6 @@ const Draw: NextPage = () => {
   // Extract initial data from route
   const roomKey: string = (router.query.key as string) || 'default'
   const username: string = (router.query.username as string) || 'default'
-  const totalUsers: number = Number(router.query.totalUsers as string) || 0
   const userColorHex: string =
     (router.query.userColorHex as string) || '#000000'
 
@@ -38,6 +44,11 @@ const Draw: NextPage = () => {
     2500,
     [isCopied]
   )
+
+  // Intialize socket connection
+  useEffect(() => {
+    socket.emit('join', { roomKey })
+  }, [roomKey])
 
   return (
     <div
@@ -57,10 +68,6 @@ const Draw: NextPage = () => {
               style={{ backgroundColor: userColorHex }}
             />
             <span className="inline-block font-bold">{username}</span>
-          </div>
-          <div className="space-x-1">
-            <FontAwesomeIcon icon={solid('user')} />
-            <span className="inline-block font-bold">{totalUsers}/8</span>
           </div>
         </div>
       </header>
@@ -89,10 +96,15 @@ const Draw: NextPage = () => {
             </button>
           </h2>
 
-          <DrawingPanel keyName={roomKey} myColor={userColorHex} />
+          <DrawingPanel
+            socket={socket}
+            roomKey={roomKey}
+            myColor={userColorHex}
+          />
         </section>
         <section className="relative h-[50vh] border-t-2 lg:h-auto lg:border-l-2 lg:border-t-0">
           <MessagesPanel
+            socket={socket}
             myUsername={username}
             myColor={userColorHex}
             roomKey={roomKey}
