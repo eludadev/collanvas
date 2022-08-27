@@ -68,7 +68,10 @@ const Draw: NextPage = () => {
       </header>
       <div className="lg:grid" style={{ gridTemplateColumns: 'auto 20rem' }}>
         <section
-          className={classNames('relative h-96 lg:h-auto', styles.drawingPanel)}
+          className={classNames(
+            'relative h-[40vh] lg:h-auto',
+            styles.drawingPanel
+          )}
         >
           <h2 className="absolute top-0 left-0 z-10 m-4 flex items-center gap-3">
             <Link href="/">
@@ -90,10 +93,8 @@ const Draw: NextPage = () => {
 
           <DrawingPanel keyName={roomKey} myColor={userColorHex} />
         </section>
-        <section className="relative h-96 border-t-2 lg:h-auto lg:border-l-2 lg:border-t-0">
-          <h2 className="m-4 font-bold">Chat</h2>
-
-          <MessagesPanel />
+        <section className="relative h-[50vh] border-t-2 lg:h-auto lg:border-l-2 lg:border-t-0">
+          <MessagesPanel myUsername={username} myColor={userColorHex} />
         </section>
       </div>
     </div>
