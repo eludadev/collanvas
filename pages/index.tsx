@@ -6,16 +6,19 @@ import type { NextPage } from 'next'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { generateKey, generateUsername } from 'utils/shuffle'
 
 import classNames from 'classnames'
 import styles from 'styles/Home.module.css'
 import { faker } from '@faker-js/faker'
 
+type HomeProps = {
+  color: string
+}
 
-const Home: NextPage = () => {
-  const [userColor, setUserColor] = useState<string>(faker.color.rgb())
+const Home: NextPage = ({ color }: HomeProps) => {
+  const [userColor, setUserColor] = useState<string>(color)
   const [username, setUsername] = useState<string>('')
   const [key, setKey] = useState<string>('')
 
@@ -31,7 +34,7 @@ const Home: NextPage = () => {
 
     setAlert(null)
     setLoading(true)
-    
+
     // If username hasn't been chosen, automatically generate a new one and save its value for immediately use in the following route
     let finalUsername
     if (!username) {
@@ -127,6 +130,11 @@ const Home: NextPage = () => {
       </main>
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  const color = faker.color.rgb()
+  return { props: { color } }
 }
 
 export default Home
