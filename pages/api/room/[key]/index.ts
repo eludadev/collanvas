@@ -1,6 +1,6 @@
 import { Message } from 'components/messages/messages-panel'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connection } from 'server/redis.mjs'
+import { connection } from 'redis.mjs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<null>) => {
   const roomKey = req.query.key

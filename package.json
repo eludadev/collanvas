@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "postinstall": "husky install",
-    "dev": "node server/index.mjs",
+    "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production && node server/index.mjs",
+    "start": "NODE_ENV=production && next start",
     "lint": "prettier . --write --ignore-path .gitignore"
   },
   "lint-staged": {

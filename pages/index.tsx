@@ -52,6 +52,7 @@ const Home = ({
       finalUsername = username
     }
 
+    await fetch('/api/socketio')
     await fetch(`/api/room/${key}`, {
       method: 'post',
     })
