@@ -29,11 +29,11 @@
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
-    "@fortawesome/free-solid-svg-icons": "^6.1.2"  
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0"
   },
   "devDependencies": {
     "@babel/helper-module-imports": "^7.18.6",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@tailwindcss/forms": "^0.5.2",
     "@types/node": "18.7.13",
     "@types/react": "18.0.17",
