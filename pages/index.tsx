@@ -2,11 +2,12 @@ import JoinAlert from 'components/join/join-alert'
 import JoinInput from 'components/join/join-input'
 import AppLoader from 'components/app/app-loader'
 
-import type { NextPage } from 'next'
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
 
-import { useEffect, useRef, useState } from 'react'
+import type { InferGetStaticPropsType } from 'next'
+
+import { useRef, useState } from 'react'
 import { generateKey, generateUsername } from 'utils/shuffle'
 
 import classNames from 'classnames'
@@ -17,7 +18,14 @@ type HomeProps = {
   color: string
 }
 
-const Home: NextPage = ({ color }: HomeProps) => {
+export async function getServerSideProps() {
+  const color = faker.color.rgb()
+  return { props: { color } }
+}
+
+const Home = ({
+  color,
+}: InferGetStaticPropsType<typeof getServerSideProps>) => {
   const [userColor, setUserColor] = useState<string>(color)
   const [username, setUsername] = useState<string>('')
   const [key, setKey] = useState<string>('')
@@ -129,11 +137,6 @@ const Home: NextPage = ({ color }: HomeProps) => {
       </main>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-  const color = faker.color.rgb()
-  return { props: { color } }
 }
 
 export default Home
