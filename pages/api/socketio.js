@@ -1,11 +1,13 @@
 import { Server } from 'socket.io'
-import { connection, subscriber, publisher } from 'redis.mjs'
+import { connect, connection, subscriber, publisher } from 'lib/redis'
 
-const ioHandler = (req, res) => {
+const ioHandler = async (req, res) => {
   if (!res.socket.server.io) {
     console.log('*First use, starting socket.io')
 
     const io = new Server(res.socket.server)
+    await connect()
+    console.log('connected')
 
     io.on('connection', (socket) => {
       socket.on('join', ({ roomKey }) => {

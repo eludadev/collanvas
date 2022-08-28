@@ -1,6 +1,6 @@
 import { Stroke } from 'components/drawing/drawing-panel'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connection } from 'redis.mjs'
+import { connection } from 'lib/redis'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Stroke[]>) => {
   const roomKey = req.query.key
