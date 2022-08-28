@@ -64,7 +64,6 @@ const Home: NextPage = ({ color }: HomeProps) => {
       <header className="ml-4">
         <h1 className="mt-16 -ml-1 text-[4rem] font-black uppercase text-white xl:-ml-2 xl:text-[7rem]">
           Collanvas
-          <span className="text-[.8em] lowercase text-white/80">.io</span>
         </h1>
         <p className="-mt-6 text-lg text-white xl:-mt-8 xl:text-2xl">
           Your whole team, changing the world one stroke at a time.
