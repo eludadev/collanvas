@@ -1,0 +1,28 @@
+{
+  "app_name": "Collanvas",
+  "description": "Online collaborative whiteboard, with chat.",
+  "hidden": "true",
+  "rank": "",
+  "type": "Full App",
+  "contributed_by": "Community",
+  "repo_url": "https://github.com/eludadev/collanvas",
+  "download_url": "https://github.com/eludadev/collanvas/archive/refs/heads/main.zip",
+  "hosted_url": "https://collanvas.herokuapp.com/",
+  "quick_deploy": "true",
+  "deploy_buttons": [
+    {
+      "heroku": "https://heroku.com/deploy?template=https://github.com/eludadev/collanvas"
+    }
+  ],
+  "language": ["JavaScript"],
+  "redis_commands": ["JSON.SET", "JSON.GET", "JSON.ARRPOP", "JSON.ARRAPPEND"],
+  "redis_features": ["database", "pubsub"],
+  "redis_modules": ["RedisJSON", "RedisPubSub"],
+  "app_image_urls": [
+    "https://github.com/eludadev/collanvas/blob/main/assets/screenshot-2.png",
+    "https://github.com/eludadev/collanvas/blob/main/assets/screenshot-1.png"
+  ],
+  "special_tags": ["Hackathon"],
+  "verticals": ["Technology", "Education"],
+  "markdown": "https://raw.githubusercontent.com/eludadev/collanvas/main/README.md"
+}
