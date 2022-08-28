@@ -2,10 +2,8 @@
 
 With an online whiteboard, you can **brainstorm** 🧠, **draw art** 🖌️, and even **play games** 🕹️ with your teammates and your friends. <mark>No login</mark> is required, and each user has access to the **chatroom**, a real-time messaging platform to have all kinds of discussions. Choose your own username, pick your own color palette, and go draw the next big thing! 🚀
 
-<img src="assets/screenshot-1.png" alt="Collanvas Home Page" width="80%" />
-<img src="assets/screenshot-1-mobile.png" alt="Collanvas Home Page on mobile" width="19%" />
-<img src="assets/screenshot-2.png" alt="Collanvas Room Page with a drawing of the text 'Redis' and a smiley face, and 2 chat messages from different people spelling 'Woohoo!'" width="80%" />
-<img src="assets/screenshot-2-mobile.png" alt="Collanvas Room Page on mobile with a drawing of the text 'Redis' and a smiley face, and 2 chat messages from different people spelling 'Woohoo!'" width="19%" />
+<img src="assets/screenshot-1.png" alt="Collanvas Home Page"/>
+<img src="assets/screenshot-2.png" alt="Collanvas Room Page with a drawing of the text 'Redis' and a smiley face, and 2 chat messages from different people spelling 'Woohoo!'"/>
 
 ## How it works
 
