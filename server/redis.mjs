@@ -13,12 +13,10 @@ export const connection = createClient({
       ? `redis://${username}:${password}@${host}:${port}`
       : 'redis://localhost:6379',
 })
+await connection.connect()
 
-// export const subscriber = connection.duplicate()
-// export const publisher = connection.duplicate()
+export const subscriber = connection.duplicate()
+await subscriber.connect()
 
-export async function connect() {
-  await connection.connect()
-  await subscriber.connect()
-  await publisher.connect()
-}
+export const publisher = connection.duplicate()
+await publisher.connect()

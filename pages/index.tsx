@@ -54,11 +54,7 @@ const Home = ({
     }
 
     try {
-      let res = await fetch('/api/socketio')
-      if (res.status !== 200) {
-        throw Error('Network error')
-      }
-      res = await fetch(`/api/room/${key}`, {
+      const res = await fetch(`/api/room/${key}`, {
         method: 'post',
       })
       if (res.status !== 200) {
