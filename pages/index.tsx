@@ -1,6 +1,7 @@
 import JoinAlert from 'components/join/join-alert'
 import JoinInput from 'components/join/join-input'
 import AppLoader from 'components/app/app-loader'
+import Head from 'next/head'
 
 import type { NextRouter } from 'next/router'
 import { useRouter } from 'next/router'
@@ -52,24 +53,39 @@ const Home = ({
       finalUsername = username
     }
 
-    await fetch('/api/socketio')
-    await fetch(`/api/room/${key}`, {
-      method: 'post',
-    })
+    try {
+      let res = await fetch('/api/socketio')
+      if (res.status !== 200) {
+        throw Error('Network error')
+      }
+      res = await fetch(`/api/room/${key}`, {
+        method: 'post',
+      })
+      if (res.status !== 200) {
+        throw Error('Network error')
+      }
 
-    formElem.current?.removeAttribute('inert')
+      formElem.current?.removeAttribute('inert')
 
-    router.push({
-      pathname: `/draw/${key}`,
-      query: {
-        username: finalUsername,
-        userColorHex: userColor.toLowerCase(),
-      },
-    })
+      router.push({
+        pathname: `/draw/${key}`,
+        query: {
+          username: finalUsername,
+          userColorHex: userColor.toLowerCase(),
+        },
+      })
+    } catch (e) {
+      setAlert((e as any).message)
+      setLoading(false)
+      formElem.current?.removeAttribute('inert')
+    }
   }
 
   return (
     <div className="mx-auto w-fit">
+      <Head>
+        <title>Collanvas</title>
+      </Head>
       <header className="ml-4">
         <h1 className="mt-16 -ml-1 text-[4rem] font-black uppercase text-white xl:-ml-2 xl:text-[7rem]">
           Collanvas

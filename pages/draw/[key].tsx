@@ -1,4 +1,5 @@
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
+import Head from 'next/head'
 
 import classNames from 'classnames'
 import styles from 'styles/Draw.module.css'
@@ -55,6 +56,9 @@ const Draw: NextPage = () => {
       className="grid h-screen bg-white"
       style={{ gridTemplateRows: 'auto 1fr' }}
     >
+      <Head>
+        <title>Collanvas - {roomKey}</title>
+      </Head>
       <header className="flex h-fit items-center justify-between py-4 px-4">
         <Link href="/">
           <a href="">
