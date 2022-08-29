@@ -5,6 +5,10 @@ With an online whiteboard, you can **brainstorm** 🧠, **draw art** 🖌️, an
 <img src="assets/screenshot-1.png" alt="Collanvas Home Page"/>
 <img src="assets/screenshot-2.png" alt="Collanvas Room Page with a drawing of the text 'Redis' and a smiley face, and 2 chat messages from different people spelling 'Woohoo!'"/>
 
+## Overview video
+
+[![I Built an Online Collaborative Canvas using Redis as my Primary Database](https://i3.ytimg.com/vi/Dh1a1vQyAJc/maxresdefault.jpg)](https://www.youtube.com/watch?v=Dh1a1vQyAJc)
+
 ## How it works
 
 ### How the data is stored:
